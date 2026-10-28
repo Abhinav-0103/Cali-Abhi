@@ -78,7 +78,7 @@ export async function completeOnboarding(raw: unknown): Promise<OnboardingResult
     .eq("id", user.id);
   if (profile.error) return saveFailed(profile.error);
 
-  redirect("/today");
+  redirect("/plan/generating");
 }
 
 function saveFailed(error: { message: string }): OnboardingResult {

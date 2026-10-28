@@ -84,10 +84,15 @@ test("new user completes onboarding with validation, back navigation and the hea
   await page.getByLabel(/I understand/).click();
   await page.getByRole("button", { name: "Finish" }).click();
 
-  // Done: lands on Today in conservative mode, and onboarding can't be repeated
-  await expect(page).toHaveURL(/\/today/);
+  // Done: the plan is generated (fake AI in tests) and shown
+  await expect(page.getByRole("heading", { name: "Your plan is ready" })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText("Why this plan")).toBeVisible();
+  await expect(page.getByText(/\[Test AI\]/)).toBeVisible();
+
+  // Today shows conservative mode and the next workout; onboarding can't be repeated
+  await page.goto("/today");
   await expect(page.getByText("Conservative mode")).toBeVisible();
-  await expect(page.getByText(/Skills · 3 days a week · 45 min/)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Next workout" })).toBeVisible();
   await page.goto("/onboarding");
   await expect(page).toHaveURL(/\/today/);
 });
