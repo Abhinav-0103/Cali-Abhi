@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertTriangle, PartyPopper } from "lucide-react";
+import { AlertTriangle, PartyPopper, TrendingUp } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,9 +9,10 @@ import { ClearOnboardingDraft } from "@/components/onboarding/clear-draft";
 import { TodayWorkout } from "@/components/workout/today-workout";
 import { requireOnboardedProfile } from "@/lib/auth/session";
 import { WEEKDAYS } from "@/lib/constants";
-import { weekdayInTimeZone } from "@/lib/dates";
+import { daysAgoIso, weekdayInTimeZone } from "@/lib/dates";
 import { getActivePlan, type PlanView } from "@/lib/plan/queries";
 import { nextPlanDay } from "@/lib/workout/logic";
+import { processPendingSessions } from "@/lib/progression/run";
 import type { StartableDay } from "@/lib/workout/types";
 
 export const metadata = { title: "Today" };
@@ -79,6 +80,17 @@ async function NextWorkout({
   timezone: string;
   supabase: Awaited<ReturnType<typeof requireOnboardedProfile>>["supabase"];
 }) {
+  // Catch up on workouts whose progression never ran (e.g. app closed right after finishing).
+  await processPendingSessions(userId, plan.planId);
+
+  const { data: updates } = await supabase
+    .from("progression_events")
+    .select("id, message, created_at")
+    .eq("plan_id", plan.planId)
+    .gte("created_at", daysAgoIso(7))
+    .order("created_at", { ascending: false })
+    .limit(3);
+
   const { data: sessions, error } = await supabase
     .from("workout_sessions")
     .select("id, status, week_number, day_number, started_at")
@@ -152,6 +164,22 @@ async function NextWorkout({
         )}
       </div>
       <TodayWorkout day={startable} userId={userId} serverInProgressId={inProgress?.id ?? null} />
+      {updates && updates.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <TrendingUp className="size-4 text-primary" aria-hidden /> Recent plan updates
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc space-y-1 pl-5 text-sm">
+              {updates.map((u) => (
+                <li key={u.id}>{u.message}</li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
       <DayCard day={next.day} />
     </section>
   );

@@ -1,9 +1,12 @@
-// Generates the exercise library seed migration from src/lib/exercises/library.ts.
-// Usage: pnpm db:gen-library
+// Generates an exercise library seed SQL file from src/lib/exercises/library.ts.
+// Usage: pnpm db:gen-library <output.sql>
+// The initial seed migration was generated with this. For later changes, write a
+// NEW migration (see 20261029000002_lunge_chain.sql) instead of regenerating it.
 import { writeFileSync } from "node:fs";
 import { EXERCISES } from "../src/lib/exercises/library";
 
-const OUT = "supabase/migrations/20261028000001_exercise_library.sql";
+const OUT = process.argv[2];
+if (!OUT) throw new Error("Usage: pnpm db:gen-library <output.sql>");
 
 const str = (s: string) => `'${s.replace(/'/g, "''")}'`;
 const arr = (a: string[]) => `array[${a.map(str).join(", ")}]::text[]`;

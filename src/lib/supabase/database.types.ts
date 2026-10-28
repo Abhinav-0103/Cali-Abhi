@@ -213,6 +213,50 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"progression_events": {
+                  Row: {
+                    "created_at": string,"decision": string,"exercise_id": string,"id": string,"message": string,"plan_id": string,"session_id": string,"to_exercise_id": string | null,"user_id": string,"version_id": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"decision": string,"exercise_id": string,"id"?: string,"message": string,"plan_id": string,"session_id": string,"to_exercise_id"?: string | null,"user_id": string,"version_id"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string,"decision"?: string,"exercise_id"?: string,"id"?: string,"message"?: string,"plan_id"?: string,"session_id"?: string,"to_exercise_id"?: string | null,"user_id"?: string,"version_id"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "progression_events_exercise_id_fkey"
+      columns: ["exercise_id"]
+isOneToOne: false
+      referencedRelation: "exercises"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "progression_events_plan_id_user_id_fkey"
+      columns: ["plan_id","user_id"]
+isOneToOne: false
+      referencedRelation: "plans"
+      referencedColumns: ["id","user_id"]
+    },{
+      foreignKeyName: "progression_events_session_id_fkey"
+      columns: ["session_id"]
+isOneToOne: false
+      referencedRelation: "workout_sessions"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "progression_events_to_exercise_id_fkey"
+      columns: ["to_exercise_id"]
+isOneToOne: false
+      referencedRelation: "exercises"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "progression_events_version_id_fkey"
+      columns: ["version_id"]
+isOneToOne: false
+      referencedRelation: "plan_versions"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"session_exercises": {
                   Row: {
                     "created_at": string,"exercise_id": string,"id": string,"plan_exercise_id": string | null,"planned_sets": number,"position": number,"rpe": number | null,"session_id": string,"skipped": boolean,"target_max": number,"target_min": number,"updated_at": string,"user_id": string

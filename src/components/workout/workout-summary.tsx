@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { summarise } from "@/lib/workout/logic";
+import { PlanUpdates } from "./plan-updates";
 import { useWorkout } from "./use-workout";
 
 export function WorkoutSummary({ sessionId, userId }: { sessionId: string; userId: string }) {
@@ -70,6 +71,8 @@ export function WorkoutSummary({ sessionId, userId }: { sessionId: string; userI
           </ul>
         </CardContent>
       </Card>
+
+      {workout.session.status === "completed" && <PlanUpdates sessionId={sessionId} ready={online && !pending} />}
 
       <p role="status" className="text-center text-sm text-muted-foreground">
         {!online ? "You're offline. Your workout is saved and will sync when you reconnect." : pending ? "Saving…" : "Saved to your account."}

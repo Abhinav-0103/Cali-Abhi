@@ -72,6 +72,11 @@ async function main() {
   });
   check("users cannot write check-ins directly", Boolean(checkinInsert.error));
 
+  const eventInsert = await a.client.from("progression_events").insert({
+    user_id: a.id, plan_id: randomUUID(), session_id: sessionId, exercise_id: "push_up", decision: "add_set", message: "x",
+  });
+  check("users cannot write progression events", Boolean(eventInsert.error));
+
   // server-only tables and functions
   const usage = await a.client.from("ai_usage").select("id");
   check("ai_usage is not readable by users", Boolean(usage.error) || usage.data?.length === 0, usage.error);

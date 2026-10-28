@@ -16,3 +16,8 @@ export function weekdayInTimeZone(timeZone: string, date = new Date()) {
   const short = new Intl.DateTimeFormat("en-US", { timeZone, weekday: "short" }).format(date);
   return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(short);
 }
+
+/** ISO timestamp `days` days before now. */
+export function daysAgoIso(days: number) {
+  return new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+}

@@ -1,6 +1,6 @@
 # CaliCoach — MVP Design & Build Plan
 
-Status: **approved 2026-10-28**. Phases 1–4 complete.
+Status: **approved 2026-10-28**. Phases 1–5 complete.
 
 Versions checked on 2026-10-28: Next.js 16.4, Tailwind 4.3, Zod 4.6, @anthropic-ai/sdk 1.3, Serwist 9.5.
 
@@ -699,7 +699,7 @@ Every phase ends with `pnpm typecheck && pnpm lint && pnpm test` green, plus a s
 | 2 ✅ | Onboarding | 8-step wizard (body, goal, experience, baseline, equipment, schedule, injuries, PAR-Q), progress bar, back navigation, draft kept in localStorage, metric/imperial, Zod per step, server action saves profile + baseline + first weight, PAR-Q warning + acknowledgement, disclaimer | Complete onboarding on a phone-sized viewport; invalid input blocked with accessible errors |
 | 3 ✅ | AI plan generation | Filter + starting-point logic, prompt builder, Zod plan schema + semantic validator, Claude call with structured output, retry-with-errors, template fallback, `save_plan_version`, quota + `ai_usage` logging, generating screen, plan overview + "why this plan" | Generate a real plan; force invalid output in a test to see retry → template; 4th generation in a day is refused |
 | 4 ✅ | Today + workout logger (offline) | Today/next-workout logic, start session, per-set logging, RPE per exercise, rest timer (vibration + sound, wake lock), finish + summary, IndexedDB + outbox sync, Realtime subscription | Log a workout in airplane mode, reconnect, see it synced; open on a second device and watch sets appear |
-| 5 | Progression engine | Pure engine + apply functions, exhaustive unit tests, `/complete` route (idempotent) writing a new version | Tests cover every rule incl. chain ends; two "easy" sessions visibly upgrade the next workout |
+| 5 ✅ | Progression engine | Pure engine + apply functions, exhaustive unit tests, `/complete` route (idempotent) writing a new version | Tests cover every rule incl. chain ends; two "easy" sessions visibly upgrade the next workout |
 | 6 | Progress screen | Streak, weekly adherence %, baseline charts (retest flow), body-weight log + chart, personal bests, paginated history | Charts render with seeded data in light/dark; keyboard + screen-reader labels |
 | 7 | Weekly check-in | 3-question form, aggregation of the week's logs, Haiku call, op validation/application, rules fallback, quota, result screen showing changes | One check-in per week enforced; adjustments appear in next week as a new version |
 | 8 | PWA polish, README, deploy | Serwist precache + offline page, install prompt, icons, security headers/CSP, delete account, Lighthouse/a11y pass, Playwright E2E (onboarding → plan → log workout, with `AI_MOCK=1`), README + Vercel/Supabase deploy guide | E2E green; Lighthouse PWA installable; deploy steps verified end to end except steps that need your accounts |
@@ -730,3 +730,5 @@ Testing approach: Vitest for engine, validator, filter, template, check-in op ap
 - Workout logging (phase 4): the workout lives in IndexedDB (`lib/offline/db.ts`) and is the source of truth while training; `lib/offline/sync.ts` pushes the whole workout with idempotent upserts (sets conflict on `(session_exercise_id, set_number)` → last write wins). A second completion of the same plan day is kept as an extra session (week/day cleared). Realtime refreshes a device only when it has nothing unsynced. Losing the connection mid-workout is fully supported now; opening the app cold while offline needs the service worker (phase 8).
 - Only main-block exercises are logged per set; warm-up and cool-down are shown as a checklist.
 - Migration `20261029000000_ai_usage_error.sql` adds `ai_usage.error` with the API failure reason.
+- Progression (phase 5): `lib/progression/engine.ts` (decide) + `apply.ts` (rewrite future days) are pure and unit-tested; `run.ts` claims each completed session once (`progression_applied_at`), builds per-exercise history since the last change involving that exercise (`progression_events`), saves a new plan version and records an event per change. Triggered by the summary screen (`POST /api/sessions/:id/complete`) with Today as a catch-up. Missing RPE counts as ≤ 8 when every set hit the top of the range. Ceilings: 12 reps / 45 s (skills 6 reps / 30 s); steps: +2 reps / +5 s (skills +1 rep). Chain moves skip steps the user isn't eligible for.
+- Migration `20261029000001_progression_events.sql` adds `progression_events`; `20261029000002_lunge_chain.sql` moves reverse lunge to its own chain (a variation, not a progression of split squat).

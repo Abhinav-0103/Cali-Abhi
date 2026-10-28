@@ -93,12 +93,15 @@ export const EXERCISES: Exercise[] = [
     ["squat_assisted", "Assisted squat", 1, "reps", [], [], ["Hold a doorframe or chair for balance", "Sit hips back and down", "Knees follow toes"]],
     ["squat", "Bodyweight squat", 2, "reps", [], [], ["Feet shoulder width, toes slightly out", "Chest up, hips below knees if comfortable", "Drive through the whole foot"]],
     ["split_squat", "Split squat", 3, "reps", [], ["knee"], ["Long stance, back heel up", "Lower the back knee towards the floor", "Front knee tracks over toes; count per leg"], true],
-    ["reverse_lunge", "Reverse lunge", 3, "reps", [], ["knee"], ["Step back and lower under control", "Torso upright", "Push through the front heel; count per leg"], true],
     ["bulgarian_split_squat", "Bulgarian split squat", 4, "reps", [], ["knee"], ["Back foot on a chair", "Most weight on the front leg", "Lower until front thigh is parallel; count per leg"], true],
     ["shrimp_squat_assisted", "Assisted shrimp squat", 6, "reps", [], ["knee"], ["Hold support, grab your back foot", "Lower the back knee to a cushion", "Stand using the front leg; count per leg"], true],
     ["shrimp_squat", "Shrimp squat", 7, "reps", [], ["knee", "ankle"], ["Hold back foot behind you", "Knee touches the floor gently", "Arms forward for balance; count per leg"], true],
     ["pistol_squat_assisted", "Assisted pistol squat", 7, "reps", [], ["knee", "ankle"], ["Hold a doorframe or band", "Free leg straight in front", "Use the support only as much as needed; count per leg"], true],
     ["pistol_squat", "Pistol squat", 8, "reps", [], ["knee", "ankle"], ["Free leg straight and off the floor", "Heel stays down", "Arms forward to counterbalance; count per leg"], true],
+  ]),
+  // A variation rather than a harder step, so it is not part of the squat chain.
+  ...chain("legs", "lunge", [
+    ["reverse_lunge", "Reverse lunge", 3, "reps", [], ["knee"], ["Step back and lower under control", "Torso upright", "Push through the front heel; count per leg"], true],
   ]),
   ...chain("legs", "hinge", [
     ["glute_bridge", "Glute bridge", 1, "reps", [], [], ["Feet flat, close to your hips", "Push hips up by squeezing glutes", "Ribs down, don't arch your lower back"]],

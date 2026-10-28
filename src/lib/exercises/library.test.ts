@@ -39,3 +39,11 @@ describe("exercise library", () => {
     }
   });
 });
+
+describe("chain ordering", () => {
+  it("numbers every chain 1..n", () => {
+    for (const [chain, list] of Map.groupBy(EXERCISES, (e) => e.chain)) {
+      expect(list.map((e) => e.chain_order).sort((a, b) => a - b), chain).toEqual(list.map((_, i) => i + 1));
+    }
+  });
+});
