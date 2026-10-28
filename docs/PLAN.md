@@ -1,6 +1,6 @@
 # CaliCoach — MVP Design & Build Plan
 
-Status: **approved 2026-10-28**. Phases 1–3 complete.
+Status: **approved 2026-10-28**. Phases 1–4 complete.
 
 Versions checked on 2026-10-28: Next.js 16.4, Tailwind 4.3, Zod 4.6, @anthropic-ai/sdk 1.3, Serwist 9.5.
 
@@ -698,7 +698,7 @@ Every phase ends with `pnpm typecheck && pnpm lint && pnpm test` green, plus a s
 | 1 ✅ | Setup, auth, schema, seed | `create-next-app` (TS strict, Tailwind 4, ESLint), shadcn init + dark mode, Supabase CLI + local stack (Docker), migrations above, 86-exercise seed, `env.ts`, Supabase clients, `proxy.ts`, login (magic link + Google), callback, signed-in shell, Vitest + Playwright config, CLAUDE.md | Sign in locally via magic link (Mailpit); RLS smoke test (SQL script proving user A can't read/write user B rows) |
 | 2 ✅ | Onboarding | 8-step wizard (body, goal, experience, baseline, equipment, schedule, injuries, PAR-Q), progress bar, back navigation, draft kept in localStorage, metric/imperial, Zod per step, server action saves profile + baseline + first weight, PAR-Q warning + acknowledgement, disclaimer | Complete onboarding on a phone-sized viewport; invalid input blocked with accessible errors |
 | 3 ✅ | AI plan generation | Filter + starting-point logic, prompt builder, Zod plan schema + semantic validator, Claude call with structured output, retry-with-errors, template fallback, `save_plan_version`, quota + `ai_usage` logging, generating screen, plan overview + "why this plan" | Generate a real plan; force invalid output in a test to see retry → template; 4th generation in a day is refused |
-| 4 | Today + workout logger (offline) | Today/next-workout logic, start session, per-set logging, RPE per exercise, rest timer (vibration + sound, wake lock), finish + summary, IndexedDB + outbox sync, Realtime subscription | Log a workout in airplane mode, reconnect, see it synced; open on a second device and watch sets appear |
+| 4 ✅ | Today + workout logger (offline) | Today/next-workout logic, start session, per-set logging, RPE per exercise, rest timer (vibration + sound, wake lock), finish + summary, IndexedDB + outbox sync, Realtime subscription | Log a workout in airplane mode, reconnect, see it synced; open on a second device and watch sets appear |
 | 5 | Progression engine | Pure engine + apply functions, exhaustive unit tests, `/complete` route (idempotent) writing a new version | Tests cover every rule incl. chain ends; two "easy" sessions visibly upgrade the next workout |
 | 6 | Progress screen | Streak, weekly adherence %, baseline charts (retest flow), body-weight log + chart, personal bests, paginated history | Charts render with seeded data in light/dark; keyboard + screen-reader labels |
 | 7 | Weekly check-in | 3-question form, aggregation of the week's logs, Haiku call, op validation/application, rules fallback, quota, result screen showing changes | One check-in per week enforced; adjustments appear in next week as a new version |
@@ -727,3 +727,6 @@ Testing approach: Vitest for engine, validator, filter, template, check-in op ap
 - `progression_applied_at` is protected by a trigger (a column REVOKE would be ignored because Supabase grants table-level UPDATE).
 - Plan generation (phase 3) uses `client.beta.messages.stream` with structured output (`betaZodOutputFormat`), effort `medium`, `max_tokens` 32k, and server-side refusal fallback (`fallbacks: "default"`). Without an `ANTHROPIC_API_KEY` the call fails and users get the template plan.
 - `ai_usage.outcome = 'ok'` means the API returned output; whether it passed validation shows in the next row (`attempt = 2`) or in `plans.source = 'template'`.
+- Workout logging (phase 4): the workout lives in IndexedDB (`lib/offline/db.ts`) and is the source of truth while training; `lib/offline/sync.ts` pushes the whole workout with idempotent upserts (sets conflict on `(session_exercise_id, set_number)` → last write wins). A second completion of the same plan day is kept as an extra session (week/day cleared). Realtime refreshes a device only when it has nothing unsynced. Losing the connection mid-workout is fully supported now; opening the app cold while offline needs the service worker (phase 8).
+- Only main-block exercises are logged per set; warm-up and cool-down are shown as a checklist.
+- Migration `20261029000000_ai_usage_error.sql` adds `ai_usage.error` with the API failure reason.

@@ -33,5 +33,6 @@ Mailpit (local magic-link emails): http://127.0.0.1:54324
 - Stored units are metric (cm, kg); convert only for display.
 - Progression logic stays pure and unit-tested in `src/lib/progression`.
 - AI flow (plans): `lib/exercises/filter.ts` (filter BEFORE prompting) → `lib/ai/plan-prompt.ts` → `lib/plan/generate.ts` (validate, retry once with errors, template fallback) → `save_plan_version`. `AI_MOCK=1` (dev/test only) swaps Claude for the template. Never send names/emails/ids to the model.
+- Workout logging: pure state changes in `lib/workout/logic.ts` (tested) → `useWorkout` saves to IndexedDB first, then `syncDirtyWorkouts` upserts to Supabase. All workout ids are generated on the device (`crypto.randomUUID`).
 - Keep code simple: no repositories/services layers, no premature abstractions. Match the style of nearby code.
 - Accessibility: every input has a label, errors use `aria-invalid` + `role="alert"`, visible focus rings, dark mode via `next-themes` (`.dark` class).

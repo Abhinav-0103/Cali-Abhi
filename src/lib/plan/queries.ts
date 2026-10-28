@@ -1,6 +1,7 @@
 import "server-only";
 import type { createClient } from "@/lib/supabase/server";
 import type { Block, Metric } from "@/lib/constants";
+import { formatTarget } from "@/lib/workout/logic";
 
 type Supabase = Awaited<ReturnType<typeof createClient>>;
 
@@ -92,8 +93,6 @@ export async function getActivePlan(supabase: Supabase): Promise<PlanView | null
   };
 }
 
-export function formatTarget(e: Pick<PlanViewExercise, "metric" | "targetMin" | "targetMax" | "unilateral">) {
-  const range = e.targetMin === e.targetMax ? `${e.targetMin}` : `${e.targetMin}–${e.targetMax}`;
-  const unit = e.metric === "reps" ? "reps" : "s";
-  return `${range} ${unit}${e.unilateral ? " per side" : ""}`;
+export function formatPlanTarget(e: Pick<PlanViewExercise, "metric" | "targetMin" | "targetMax" | "unilateral">) {
+  return formatTarget(e.targetMin, e.targetMax, e.metric, e.unilateral);
 }

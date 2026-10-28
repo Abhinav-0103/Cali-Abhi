@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { SignOutButton } from "@/components/sign-out-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { DisclaimerFooter } from "@/components/disclaimer";
@@ -25,11 +25,7 @@ export default async function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-sm text-muted-foreground">Signed in as {user.email}</p>
-          <form action="/auth/signout" method="post">
-            <Button type="submit" variant="outline">
-              Sign out
-            </Button>
-          </form>
+          <SignOutButton />
         </CardContent>
       </Card>
       <DisclaimerFooter />

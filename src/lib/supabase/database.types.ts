@@ -39,14 +39,14 @@ export type Database = {
                   ]
                 },"ai_usage": {
                   Row: {
-                    "attempt": number,"cache_creation_input_tokens": number,"cache_read_input_tokens": number,"created_at": string,"id": number,"input_tokens": number,"kind": string,"latency_ms": number | null,"model": string,"outcome": string,"output_tokens": number,"user_id": string | null
+                    "attempt": number,"cache_creation_input_tokens": number,"cache_read_input_tokens": number,"created_at": string,"error": string | null,"id": number,"input_tokens": number,"kind": string,"latency_ms": number | null,"model": string,"outcome": string,"output_tokens": number,"user_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "attempt"?: number,"cache_creation_input_tokens"?: number,"cache_read_input_tokens"?: number,"created_at"?: string,"id"?: never,"input_tokens"?: number,"kind": string,"latency_ms"?: number | null,"model": string,"outcome": string,"output_tokens"?: number,"user_id"?: string | null
+                    "attempt"?: number,"cache_creation_input_tokens"?: number,"cache_read_input_tokens"?: number,"created_at"?: string,"error"?: string | null,"id"?: never,"input_tokens"?: number,"kind": string,"latency_ms"?: number | null,"model": string,"outcome": string,"output_tokens"?: number,"user_id"?: string | null
                   }
                   Update: {
-                    "attempt"?: number,"cache_creation_input_tokens"?: number,"cache_read_input_tokens"?: number,"created_at"?: string,"id"?: never,"input_tokens"?: number,"kind"?: string,"latency_ms"?: number | null,"model"?: string,"outcome"?: string,"output_tokens"?: number,"user_id"?: string | null
+                    "attempt"?: number,"cache_creation_input_tokens"?: number,"cache_read_input_tokens"?: number,"created_at"?: string,"error"?: string | null,"id"?: never,"input_tokens"?: number,"kind"?: string,"latency_ms"?: number | null,"model"?: string,"outcome"?: string,"output_tokens"?: number,"user_id"?: string | null
                   }
                   Relationships: [
                     

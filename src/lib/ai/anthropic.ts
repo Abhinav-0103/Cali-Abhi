@@ -70,10 +70,15 @@ export async function callClaude(messages: ChatMessage[], opts: CallOptions, att
     });
     return problem ? { text: null, problem } : { text };
   } catch (error) {
-    await logUsage({ ...usageRow, outcome: "api_error", latency_ms: Date.now() - started });
-    if (error instanceof Anthropic.APIError) {
-      console.error(`Claude API error ${error.status}`, error.message);
-    }
+    // e.g. "400 credit balance is too low", "401 invalid x-api-key", missing key
+    const reason =
+      error instanceof Anthropic.APIError
+        ? `${error.status ?? "network"} ${error.message}`
+        : error instanceof Error
+          ? error.message
+          : String(error);
+    console.error("Claude API error", reason);
+    await logUsage({ ...usageRow, outcome: "api_error", error: reason.slice(0, 500), latency_ms: Date.now() - started });
     throw error;
   }
 }
@@ -89,6 +94,7 @@ type UsageRow = {
   cache_read_input_tokens?: number;
   cache_creation_input_tokens?: number;
   latency_ms: number;
+  error?: string;
 };
 
 async function logUsage(row: UsageRow) {

@@ -7,7 +7,8 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { completeOnboarding } from "@/app/(app)/onboarding/actions";
 import { ONBOARDING_STEPS, validateFields, type FieldErrors, type OnboardingField } from "@/lib/schemas/onboarding";
-import { DRAFT_STORAGE_KEY as STORAGE_KEY, EMPTY_DRAFT, localIsoDate, toOnboardingInput, type OnboardingDraft } from "./draft";
+import { localIsoDate } from "@/lib/dates";
+import { DRAFT_STORAGE_KEY as STORAGE_KEY, EMPTY_DRAFT, toOnboardingInput, type OnboardingDraft } from "./draft";
 import { STEP_COMPONENTS } from "./steps";
 
 type Saved = { draft: OnboardingDraft; step: number };

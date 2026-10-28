@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { WEEKDAYS } from "@/lib/constants";
-import { formatTarget, type PlanViewDay } from "@/lib/plan/queries";
+import { formatPlanTarget, type PlanViewDay } from "@/lib/plan/queries";
 
 function formatRest(seconds: number) {
   return seconds >= 60 ? `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")} min rest` : `${seconds} s rest`;
@@ -31,7 +31,7 @@ export function DayCard({ day }: { day: PlanViewDay }) {
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-medium">{e.name}</span>
                 <span className="shrink-0 text-muted-foreground">
-                  {e.sets} × {formatTarget(e)}
+                  {e.sets} × {formatPlanTarget(e)}
                 </span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
