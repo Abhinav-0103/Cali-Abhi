@@ -1,6 +1,6 @@
 # CaliCoach — MVP Design & Build Plan
 
-Status: **approved 2026-10-28**. Phases 1–5 complete.
+Status: **approved 2026-10-28**. Phases 1–6 complete.
 
 Versions checked on 2026-10-28: Next.js 16.4, Tailwind 4.3, Zod 4.6, @anthropic-ai/sdk 1.3, Serwist 9.5.
 
@@ -700,7 +700,7 @@ Every phase ends with `pnpm typecheck && pnpm lint && pnpm test` green, plus a s
 | 3 ✅ | AI plan generation | Filter + starting-point logic, prompt builder, Zod plan schema + semantic validator, Claude call with structured output, retry-with-errors, template fallback, `save_plan_version`, quota + `ai_usage` logging, generating screen, plan overview + "why this plan" | Generate a real plan; force invalid output in a test to see retry → template; 4th generation in a day is refused |
 | 4 ✅ | Today + workout logger (offline) | Today/next-workout logic, start session, per-set logging, RPE per exercise, rest timer (vibration + sound, wake lock), finish + summary, IndexedDB + outbox sync, Realtime subscription | Log a workout in airplane mode, reconnect, see it synced; open on a second device and watch sets appear |
 | 5 ✅ | Progression engine | Pure engine + apply functions, exhaustive unit tests, `/complete` route (idempotent) writing a new version | Tests cover every rule incl. chain ends; two "easy" sessions visibly upgrade the next workout |
-| 6 | Progress screen | Streak, weekly adherence %, baseline charts (retest flow), body-weight log + chart, personal bests, paginated history | Charts render with seeded data in light/dark; keyboard + screen-reader labels |
+| 6 ✅ | Progress screen | Streak, weekly adherence %, baseline charts (retest flow), body-weight log + chart, personal bests, paginated history | Charts render with seeded data in light/dark; keyboard + screen-reader labels |
 | 7 | Weekly check-in | 3-question form, aggregation of the week's logs, Haiku call, op validation/application, rules fallback, quota, result screen showing changes | One check-in per week enforced; adjustments appear in next week as a new version |
 | 8 | PWA polish, README, deploy | Serwist precache + offline page, install prompt, icons, security headers/CSP, delete account, Lighthouse/a11y pass, Playwright E2E (onboarding → plan → log workout, with `AI_MOCK=1`), README + Vercel/Supabase deploy guide | E2E green; Lighthouse PWA installable; deploy steps verified end to end except steps that need your accounts |
 
@@ -732,3 +732,4 @@ Testing approach: Vitest for engine, validator, filter, template, check-in op ap
 - Migration `20261029000000_ai_usage_error.sql` adds `ai_usage.error` with the API failure reason.
 - Progression (phase 5): `lib/progression/engine.ts` (decide) + `apply.ts` (rewrite future days) are pure and unit-tested; `run.ts` claims each completed session once (`progression_applied_at`), builds per-exercise history since the last change involving that exercise (`progression_events`), saves a new plan version and records an event per change. Triggered by the summary screen (`POST /api/sessions/:id/complete`) with Today as a catch-up. Missing RPE counts as ≤ 8 when every set hit the top of the range. Ceilings: 12 reps / 45 s (skills 6 reps / 30 s); steps: +2 reps / +5 s (skills +1 rep). Chain moves skip steps the user isn't eligible for.
 - Migration `20261029000001_progression_events.sql` adds `progression_events`; `20261029000002_lunge_chain.sql` moves reverse lunge to its own chain (a variation, not a progression of split squat).
+- Progress (phase 6): streak = consecutive weeks meeting the weekly target (the unfinished current week never breaks it); adherence = completed / target per Monday-based week, capped at 100%. Pure functions in `lib/progress/stats.ts`. Charts are single-series in `--chart-1`, which was adjusted to pass the dataviz palette validator in both modes; each chart has a role="img" summary and a table view. History uses keyset pagination on `(performed_on, id)`.

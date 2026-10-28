@@ -62,7 +62,8 @@
   --border: oklch(0.91 0 0);
   --input: oklch(0.88 0 0);
   --ring: oklch(0.55 0.1 185);
-  --chart-1: oklch(0.55 0.11 185);
+  /* Validated with the dataviz palette checker against white and the dark card surface. */
+  --chart-1: oklch(0.58 0.13 185);
   --chart-2: oklch(0.65 0.16 45);
   --chart-3: oklch(0.55 0.15 265);
   --chart-4: oklch(0.7 0.14 120);
@@ -91,7 +92,7 @@
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 18%);
   --ring: oklch(0.7 0.1 185);
-  --chart-1: oklch(0.75 0.11 185);
+  --chart-1: oklch(0.66 0.13 185);
   --chart-2: oklch(0.75 0.15 50);
   --chart-3: oklch(0.7 0.14 265);
   --chart-4: oklch(0.78 0.14 125);

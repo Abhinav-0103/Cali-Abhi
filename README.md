@@ -2,7 +2,7 @@
 
 An AI-powered calisthenics coach. Users answer a short questionnaire, get a personalised 4-week bodyweight plan, log their workouts (even offline), and the plan adapts as they progress.
 
-> **Status:** MVP in progress (phases 1–5 of 8 complete: setup, auth, schema, exercise library, onboarding, AI plan generation, workout logger, progression engine). The full deploy guide arrives in phase 8. Design: [`docs/PLAN.md`](docs/PLAN.md).
+> **Status:** MVP in progress (phases 1–6 of 8 complete: setup, auth, schema, exercise library, onboarding, AI plan generation, workout logger, progression engine, progress screen). The full deploy guide arrives in phase 8. Design: [`docs/PLAN.md`](docs/PLAN.md).
 
 ## Local setup
 

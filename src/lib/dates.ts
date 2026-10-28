@@ -21,3 +21,8 @@ export function weekdayInTimeZone(timeZone: string, date = new Date()) {
 export function daysAgoIso(days: number) {
   return new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
 }
+
+/** "29 Oct" style label for a YYYY-MM-DD date. */
+export function shortDate(date: string) {
+  return new Date(`${date}T00:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+}

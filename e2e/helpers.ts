@@ -47,3 +47,18 @@ export async function completeOnboarding(page: Page) {
   }
   await page.getByRole("button", { name: "Finish" }).click();
 }
+
+/** Service-role client for seeding test data in the LOCAL Supabase (reads .env.local). */
+export async function localAdmin() {
+  const { readFileSync } = await import("node:fs");
+  const { createClient } = await import("@supabase/supabase-js");
+  const env = Object.fromEntries(
+    readFileSync(".env.local", "utf8")
+      .split("\n")
+      .filter((l) => l.includes("="))
+      .map((l) => [l.slice(0, l.indexOf("=")), l.slice(l.indexOf("=") + 1)]),
+  );
+  const url = env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!url.includes("127.0.0.1") && !url.includes("localhost")) throw new Error("Refusing to seed a non-local database");
+  return createClient(url, env.SUPABASE_SECRET_KEY, { auth: { persistSession: false } });
+}
