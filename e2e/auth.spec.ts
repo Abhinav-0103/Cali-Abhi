@@ -9,5 +9,5 @@ test("signed-out users are sent to login", async ({ page }) => {
 test("magic link signs a new user in and lands on onboarding", async ({ page }) => {
   await signInWithMagicLink(page, `e2e-${Date.now()}@example.test`);
   await expect(page).toHaveURL(/\/onboarding/);
-  await expect(page.getByRole("heading", { name: "Welcome to CaliCoach" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "About you" })).toBeVisible();
 });

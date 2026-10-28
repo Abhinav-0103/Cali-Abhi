@@ -1,6 +1,6 @@
 # CaliCoach — MVP Design & Build Plan
 
-Status: **approved 2026-10-28**. Phase 1 complete.
+Status: **approved 2026-10-28**. Phases 1–2 complete.
 
 Versions checked on 2026-10-28: Next.js 16.4, Tailwind 4.3, Zod 4.6, @anthropic-ai/sdk 1.3, Serwist 9.5.
 
@@ -696,7 +696,7 @@ Every phase ends with `pnpm typecheck && pnpm lint && pnpm test` green, plus a s
 | # | Phase | Contents | Exit criteria |
 |---|---|---|---|
 | 1 ✅ | Setup, auth, schema, seed | `create-next-app` (TS strict, Tailwind 4, ESLint), shadcn init + dark mode, Supabase CLI + local stack (Docker), migrations above, 86-exercise seed, `env.ts`, Supabase clients, `proxy.ts`, login (magic link + Google), callback, signed-in shell, Vitest + Playwright config, CLAUDE.md | Sign in locally via magic link (Mailpit); RLS smoke test (SQL script proving user A can't read/write user B rows) |
-| 2 | Onboarding | 8-step wizard (body, goal, experience, baseline, equipment, schedule, injuries, PAR-Q), progress bar, back navigation, draft kept in localStorage, metric/imperial, Zod per step, server action saves profile + baseline + first weight, PAR-Q warning + acknowledgement, disclaimer | Complete onboarding on a phone-sized viewport; invalid input blocked with accessible errors |
+| 2 ✅ | Onboarding | 8-step wizard (body, goal, experience, baseline, equipment, schedule, injuries, PAR-Q), progress bar, back navigation, draft kept in localStorage, metric/imperial, Zod per step, server action saves profile + baseline + first weight, PAR-Q warning + acknowledgement, disclaimer | Complete onboarding on a phone-sized viewport; invalid input blocked with accessible errors |
 | 3 | AI plan generation | Filter + starting-point logic, prompt builder, Zod plan schema + semantic validator, Claude call with structured output, retry-with-errors, template fallback, `save_plan_version`, quota + `ai_usage` logging, generating screen, plan overview + "why this plan" | Generate a real plan; force invalid output in a test to see retry → template; 4th generation in a day is refused |
 | 4 | Today + workout logger (offline) | Today/next-workout logic, start session, per-set logging, RPE per exercise, rest timer (vibration + sound, wake lock), finish + summary, IndexedDB + outbox sync, Realtime subscription | Log a workout in airplane mode, reconnect, see it synced; open on a second device and watch sets appear |
 | 5 | Progression engine | Pure engine + apply functions, exhaustive unit tests, `/complete` route (idempotent) writing a new version | Tests cover every rule incl. chain ends; two "easy" sessions visibly upgrade the next workout |
