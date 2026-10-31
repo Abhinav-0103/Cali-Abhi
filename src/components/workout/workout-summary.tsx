@@ -7,9 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { summarise } from "@/lib/workout/logic";
 import { PlanUpdates } from "./plan-updates";
-import { useWorkout } from "./use-workout";
+import { useRouteSessionId, useWorkout } from "./use-workout";
 
-export function WorkoutSummary({ sessionId, userId }: { sessionId: string; userId: string }) {
+export function WorkoutSummary({ sessionId: renderedSessionId, userId }: { sessionId: string; userId: string }) {
+  const sessionId = useRouteSessionId(renderedSessionId);
   const { state, workout, online, pending } = useWorkout(sessionId, userId);
 
   if (state.kind === "loading") return <Skeleton className="h-64 w-full" />;

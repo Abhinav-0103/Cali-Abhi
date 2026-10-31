@@ -4,12 +4,18 @@ import { Button } from "@/components/ui/button";
 import { DisclaimerFooter } from "@/components/disclaimer";
 import { getUser } from "@/lib/supabase/server";
 
-export default async function LandingPage() {
+export default async function LandingPage({ searchParams }: PageProps<"/">) {
   if (await getUser()) redirect("/today");
+  const { deleted } = await searchParams;
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6">
       <div className="space-y-4">
+        {deleted && (
+          <p role="status" className="rounded-md border p-3 text-sm">
+            Your account and all your data have been deleted.
+          </p>
+        )}
         <p className="text-sm font-medium text-primary">CaliCoach</p>
         <h1 className="text-4xl font-bold tracking-tight">Bodyweight training that adapts to you.</h1>
         <p className="text-muted-foreground">

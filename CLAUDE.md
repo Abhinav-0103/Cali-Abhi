@@ -21,7 +21,7 @@ pnpm db:reset           # re-apply all migrations
 pnpm db:types           # regenerate src/lib/supabase/database.types.ts after schema changes
 pnpm db:test-rls        # RLS smoke test against local DB
 pnpm db:gen-library     # regenerate exercise seed SQL from src/lib/exercises/library.ts
-pnpm test:e2e           # Playwright (set PLAYWRIGHT_CHROMIUM_PATH to a local Chromium if needed)
+pnpm test:e2e           # Playwright: dev server (port 3000) + production build for the PWA test (port 3100); set PLAYWRIGHT_CHROMIUM_PATH to a local Chromium if needed
 ```
 Mailpit (local magic-link emails): http://127.0.0.1:54324
 
@@ -34,5 +34,7 @@ Mailpit (local magic-link emails): http://127.0.0.1:54324
 - Progression logic stays pure and unit-tested in `src/lib/progression`.
 - AI flow (plans): `lib/exercises/filter.ts` (filter BEFORE prompting) → `lib/ai/plan-prompt.ts` → `lib/plan/generate.ts` (validate, retry once with errors, template fallback) → `save_plan_version`. `AI_MOCK=1` (dev/test only) swaps Claude for the template. Never send names/emails/ids to the model.
 - Workout logging: pure state changes in `lib/workout/logic.ts` (tested) → `useWorkout` saves to IndexedDB first, then `syncDirtyWorkouts` upserts to Supabase. All workout ids are generated on the device (`crypto.randomUUID`).
+- Offline/PWA: `public/sw.js` (production only). Pages it may cache are listed in `APP_PAGES`; personal pages are cleared on sign-out. Workout pages must read the session id from the URL (`useRouteSessionId`), never only from props.
+- `"use server"` files may only export async functions; shared helpers used by server pages must not live in `"use client"` modules.
 - Keep code simple: no repositories/services layers, no premature abstractions. Match the style of nearby code.
 - Accessibility: every input has a label, errors use `aria-invalid` + `role="alert"`, visible focus rings, dark mode via `next-themes` (`.dark` class).

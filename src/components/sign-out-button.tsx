@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { allWorkouts, clearOfflineData } from "@/lib/offline/db";
 import { syncDirtyWorkouts } from "@/lib/offline/sync";
 import { createClient } from "@/lib/supabase/client";
+import { clearOfflinePages } from "@/components/pwa/pwa-register";
 
 /** Syncs, then clears on-device workout data before signing out (shared devices). */
 export function SignOutButton({ variant = "outline" }: { variant?: "outline" | "link" }) {
@@ -18,6 +19,7 @@ export function SignOutButton({ variant = "outline" }: { variant?: "outline" | "
         return;
       }
       await clearOfflineData();
+      await clearOfflinePages();
     } catch {
       // Storage unavailable: nothing to clear.
     }

@@ -70,11 +70,12 @@ export function RestTimer({ endsAt, onAdjust, onDone }: { endsAt: number; onAdju
           {remaining <= 0 ? "Rest over. Start your next set." : ""}
         </p>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => onAdjust(-15_000)} aria-label="Rest 15 seconds less">
-            −15s
+          {/* The accessible name starts with the visible text (voice control users say what they see). */}
+          <Button variant="outline" size="sm" onClick={() => onAdjust(-15_000)}>
+            −15s<span className="sr-only"> rest</span>
           </Button>
-          <Button variant="outline" size="sm" onClick={() => onAdjust(15_000)} aria-label="Rest 15 seconds more">
-            +15s
+          <Button variant="outline" size="sm" onClick={() => onAdjust(15_000)}>
+            +15s<span className="sr-only"> rest</span>
           </Button>
           <Button size="sm" onClick={onDone}>
             Skip

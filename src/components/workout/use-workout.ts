@@ -19,6 +19,20 @@ function subscribeOnline(callback: () => void) {
   };
 }
 
+const noopSubscribe = () => () => {};
+
+/**
+ * The workout id from the address bar. Offline, the service worker may serve a
+ * cached page rendered for a different id, so the URL is the source of truth.
+ */
+export function useRouteSessionId(fallback: string) {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => window.location.pathname.match(/\/workout\/([0-9a-f-]{36})/)?.[1] ?? fallback,
+    () => fallback,
+  );
+}
+
 export function useOnline() {
   return useSyncExternalStore(subscribeOnline, () => navigator.onLine, () => true);
 }

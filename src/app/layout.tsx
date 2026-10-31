@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { PwaRegister } from "@/components/pwa/pwa-register";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
   description: "Your AI calisthenics coach: a personalised plan that adapts as you train.",
   applicationName: "CaliCoach",
   appleWebApp: { capable: true, title: "CaliCoach", statusBarStyle: "default" },
+  icons: { apple: "/icons/apple-touch-icon.png" },
 };
 
 export const viewport: Viewport = {
@@ -31,6 +33,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <ThemeProvider>
           {children}
           <Toaster position="top-center" />
+          <PwaRegister />
         </ThemeProvider>
       </body>
     </html>

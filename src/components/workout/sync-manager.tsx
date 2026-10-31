@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { allWorkouts, deleteWorkout } from "@/lib/offline/db";
 import { syncDirtyWorkouts } from "@/lib/offline/sync";
 import { createClient } from "@/lib/supabase/client";
+import { warmOfflineCache } from "@/components/pwa/pwa-register";
 
 const INTERVAL_MS = 30_000;
 const KEEP_FINISHED_MS = 24 * 60 * 60 * 1000;
@@ -14,6 +15,7 @@ export function SyncManager() {
     const supabase = createClient();
     const run = async () => {
       await syncDirtyWorkouts(supabase);
+      void warmOfflineCache();
       // Tidy up finished workouts that are safely on the server.
       for (const w of await allWorkouts()) {
         const finishedAt = w.session.completed_at ? Date.parse(w.session.completed_at) : null;

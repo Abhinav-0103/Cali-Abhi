@@ -20,12 +20,13 @@ import {
 import type { MobilityItem } from "@/lib/workout/types";
 import { ExerciseCard } from "./exercise-card";
 import { formatClock, primeAudio, RestTimer } from "./rest-timer";
-import { useWorkout } from "./use-workout";
+import { useRouteSessionId, useWorkout } from "./use-workout";
 
 const newId = () => crypto.randomUUID();
 const nowIso = () => new Date().toISOString();
 
-export function WorkoutLogger({ sessionId, userId }: { sessionId: string; userId: string }) {
+export function WorkoutLogger({ sessionId: renderedSessionId, userId }: { sessionId: string; userId: string }) {
+  const sessionId = useRouteSessionId(renderedSessionId);
   const router = useRouter();
   const { state, workout, update, online, pending, syncNow } = useWorkout(sessionId, userId);
   const [restEndsAt, setRestEndsAt] = useState<number | null>(null);
